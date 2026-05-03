@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Webflow Blog CMS API Test</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f7f4;
+        --text: #151515;
+        --muted: #5b5b57;
+        --line: #d8d7cf;
+        --panel: #ffffff;
+        --accent: #006b5f;
+        --accent-dark: #00483f;
+        --warn: #8a4b00;
+        --code: #20201d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      main {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 40px 0 56px;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        max-width: 780px;
+        margin-bottom: 10px;
+        font-size: clamp(2rem, 5vw, 4.2rem);
+        line-height: 0.96;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin-bottom: 16px;
+        font-size: 1.45rem;
+      }
+
+      h3 {
+        margin-bottom: 10px;
+        font-size: 1rem;
+      }
+
+      a {
+        color: var(--accent-dark);
+      }
+
+      .intro {
+        max-width: 760px;
+        color: var(--muted);
+        font-size: 1.1rem;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1.1fr);
+        gap: 20px;
+        align-items: start;
+        margin-top: 28px;
+      }
+
+      section,
+      .tester {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        padding: 22px;
+      }
+
+      section + section {
+        margin-top: 20px;
+      }
+
+      ol,
+      ul {
+        padding-left: 1.25rem;
+      }
+
+      li + li {
+        margin-top: 8px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--muted);
+        font-size: 0.86rem;
+        font-weight: 700;
+      }
+
+      input,
+      select {
+        width: 100%;
+        height: 42px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 0 12px;
+        color: var(--text);
+        background: #fff;
+        font: inherit;
+      }
+
+      .fields {
+        display: grid;
+        gap: 14px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      button {
+        width: 100%;
+        min-height: 44px;
+        border: 0;
+        border-radius: 6px;
+        background: var(--accent);
+        color: #fff;
+        font: inherit;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: var(--accent-dark);
+      }
+
+      button:disabled {
+        cursor: wait;
+        opacity: 0.7;
+      }
+
+      pre {
+        overflow: auto;
+        margin: 12px 0 0;
+        border-radius: 8px;
+        background: var(--code);
+        color: #f4f1e8;
+        padding: 14px;
+        font-size: 0.86rem;
+        line-height: 1.45;
+      }
+
+      code {
+        font-family:
+          "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      }
+
+      .note {
+        border-left: 4px solid var(--warn);
+        padding-left: 12px;
+        color: var(--muted);
+      }
+
+      .output-header {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 20px;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .items {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .item {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 12px;
+        background: #fbfbf9;
+      }
+
+      .item a {
+        font-weight: 800;
+      }
+
+      .meta {
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+
+      @media (max-width: 860px) {
+        .grid,
+        .row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Webflow Blog CMS API Test</h1>
+      <p class="intro">
+        Use this page to test pulling blog posts from Webflow CMS, then give the
+        Framer dev the server-side fetch pattern below.
+      </p>
+
+      <div class="grid">
+        <div>
+          <section>
+            <h2>What Framer Needs</h2>
+            <ol>
+              <li>Webflow API token with <code>CMS:read</code> scope.</li>
+              <li>Blog Collection ID from Webflow.</li>
+              <li>
+                Endpoint:
+                <code>GET https://api.webflow.com/v2/collections/:collection_id/items</code>
+              </li>
+              <li>
+                Query:
+                <code>limit=100</code>, <code>offset=0</code>,
+                <code>sortBy=lastPublished</code>, <code>sortOrder=desc</code>.
+              </li>
+            </ol>
+          </section>
+
+          <section>
+            <h2>Important</h2>
+            <p class="note">
+              Do not expose the Webflow token in production client-side code.
+              Put it in a Framer/serverless backend route or secure integration
+              layer, then return safe blog JSON to the page.
+            </p>
+          </section>
+
+          <section>
+            <h2>Server-Side Fetch</h2>
+            <pre><code>const WEBFLOW_TOKEN = process.env.WEBFLOW_TOKEN
+const BLOG_COLLECTION_ID = process.env.WEBFLOW_BLOG_COLLECTION_ID
+
+export async function getWebflowBlogPosts() {
+  const params = new URLSearchParams({
+    limit: "100",
+    offset: "0",
+    sortBy: "lastPublished",
+    sortOrder: "desc",
+  })
+
+  const response = await fetch(
+    `https://api.webflow.com/v2/collections/${BLOG_COLLECTION_ID}/items?${params}`,
+    {
+      headers: {
+        Authorization: `Bearer ${WEBFLOW_TOKEN}`,
+        accept: "application/json",
+      },
+    }
+  )
+
+  if (!response.ok) {
+    throw new Error(`Webflow CMS error: ${response.status}`)
+  }
+
+  const data = await response.json()
+
+  return data.items.map((item) => ({
+    id: item.id,
+    name: item.fieldData.name,
+    slug: item.fieldData.slug,
+    url: `/blog/${item.fieldData.slug}`,
+    publishedAt: item.lastPublished,
+    updatedAt: item.lastUpdated,
+    fields: item.fieldData,
+  }))
+}</code></pre>
+          </section>
+
+          <section>
+            <h2>cURL Test</h2>
+            <pre><code>curl -G "https://api.webflow.com/v2/collections/BLOG_COLLECTION_ID/items" \
+  -H "Authorization: Bearer WEBFLOW_TOKEN" \
+  -H "accept: application/json" \
+  -d limit=100 \
+  -d offset=0 \
+  -d sortBy=lastPublished \
+  -d sortOrder=desc</code></pre>
+          </section>
+        </div>
+
+        <div class="tester">
+          <h2>Live Tester</h2>
+          <p class="note">
+            Dev-only browser test. Token stays in this browser session, but
+            production Framer code should proxy server-side.
+          </p>
+
+          <form id="testerForm" class="fields">
+            <div>
+              <label for="token">Webflow API Token</label>
+              <input
+                id="token"
+                name="token"
+                autocomplete="off"
+                placeholder="wf_..."
+                value="566c29df92411bf295e089df30b1f4f97a71470e34a387b3ca4faa081e347830"
+                required
+              />
+            </div>
+
+            <div>
+              <label for="collectionId">Blog Collection ID</label>
+              <input
+                id="collectionId"
+                name="collectionId"
+                autocomplete="off"
+                placeholder="xxxxxxxxxxxxxxxxxxxxxxxx"
+                value="68c2f83a5e5b58838458e197"
+                required
+              />
+            </div>
+
+            <div class="row">
+              <div>
+                <label for="limit">Limit</label>
+                <input id="limit" name="limit" type="number" min="1" max="100" value="20" />
+              </div>
+              <div>
+                <label for="sortOrder">Sort Order</label>
+                <select id="sortOrder" name="sortOrder">
+                  <option value="desc">Newest first</option>
+                  <option value="asc">Oldest first</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit">Fetch Blog Posts</button>
+          </form>
+
+          <div class="output-header">
+            <strong id="status">Waiting</strong>
+            <span id="count"></span>
+          </div>
+          <div id="items" class="items"></div>
+          <pre id="raw"><code>{}</code></pre>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      const form = document.querySelector("#testerForm")
+      const button = form.querySelector("button")
+      const statusEl = document.querySelector("#status")
+      const countEl = document.querySelector("#count")
+      const itemsEl = document.querySelector("#items")
+      const rawEl = document.querySelector("#raw code")
+
+      function setStatus(message, isError = false) {
+        statusEl.textContent = message
+        statusEl.style.color = isError ? "#a11f12" : ""
+      }
+
+      function getField(fieldData, names) {
+        for (const name of names) {
+          if (fieldData && fieldData[name]) return fieldData[name]
+        }
+        return ""
+      }
+
+      function renderItems(items) {
+        itemsEl.innerHTML = ""
+
+        items.forEach((item) => {
+          const fieldData = item.fieldData || {}
+          const name = getField(fieldData, ["name", "title"]) || item.id
+          const slug = getField(fieldData, ["slug"])
+          const summary = getField(fieldData, [
+            "summary",
+            "excerpt",
+            "description",
+            "meta-description",
+          ])
+          const url = slug ? `/blog/${slug}` : "#"
+
+          const node = document.createElement("article")
+          node.className = "item"
+          node.innerHTML = `
+            <a href="${url}">${name}</a>
+            <div class="meta">${slug || "No slug"} · ${item.lastPublished || "Unpublished"}</div>
+            ${summary ? `<p class="meta">${summary}</p>` : ""}
+          `
+          itemsEl.appendChild(node)
+        })
+      }
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault()
+
+        const formData = new FormData(form)
+        const token = formData.get("token").trim()
+        const collectionId = formData.get("collectionId").trim()
+        const params = new URLSearchParams({
+          limit: formData.get("limit") || "20",
+          offset: "0",
+          sortBy: "lastPublished",
+          sortOrder: formData.get("sortOrder") || "desc",
+        })
+
+        button.disabled = true
+        setStatus("Fetching...")
+        countEl.textContent = ""
+        itemsEl.innerHTML = ""
+
+        try {
+          const response = await fetch(
+            `https://api.webflow.com/v2/collections/${collectionId}/items?${params}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                accept: "application/json",
+              },
+            }
+          )
+
+          const data = await response.json()
+          rawEl.textContent = JSON.stringify(data, null, 2)
+
+          if (!response.ok) {
+            throw new Error(data.message || `HTTP ${response.status}`)
+          }
+
+          renderItems(data.items || [])
+          setStatus("Success")
+          countEl.textContent = `${data.items?.length || 0} shown / ${data.pagination?.total || 0} total`
+        } catch (error) {
+          setStatus(error.message, true)
+          rawEl.textContent = JSON.stringify({ error: error.message }, null, 2)
+        } finally {
+          button.disabled = false
+        }
+      })
+    </script>
+  </body>
+</html>
