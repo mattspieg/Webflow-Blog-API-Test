@@ -4,9 +4,7 @@ const path = require("node:path")
 const { URL } = require("node:url")
 
 const PORT = Number(process.env.PORT || 8000)
-const WEBFLOW_TOKEN =
-  process.env.WEBFLOW_TOKEN ||
-  "566c29df92411bf295e089df30b1f4f97a71470e34a387b3ca4faa081e347830"
+const WEBFLOW_TOKEN = process.env.WEBFLOW_TOKEN
 const BLOG_COLLECTION_ID =
   process.env.WEBFLOW_BLOG_COLLECTION_ID || "68c2f83a5e5b58838458e197"
 
@@ -32,6 +30,11 @@ async function handleBlogRequest(req, res, requestUrl) {
   const webflowUrl = `https://api-cdn.webflow.com/v2/collections/${collectionId}/items/live?${params}`
 
   try {
+    if (!token) {
+      sendJson(res, 400, { error: "Missing Webflow API token" })
+      return
+    }
+
     const response = await fetch(webflowUrl, {
       headers: {
         Authorization: `Bearer ${token}`,
